@@ -1,33 +1,77 @@
-# repo-baseline
+# Azure API Management Demo
 
-A minimal GitHub template repository providing baseline structure and conventions for new projects.
+This repository contains Bicep infrastructure code to provision Azure API Management with a simple REST GET API endpoint.
 
-## What This Is
+## Features
 
-This is a **template repository** that provides:
-- Human and AI collaboration guidance (AGENTS.md)
-- Issue and pull request templates for structured communication
-- Manual Azure OIDC validation workflow
-- A starting point that avoids premature technical decisions
+- Azure API Management instance (Consumption tier)
+- REST GET API endpoint at `/hello`
+- Returns a constant string: `Hello AI Gateway!`
+- No authentication required for the basic example
 
-This template is intentionally minimal and public-safe, containing no secrets, licenses, or environment-specific configuration.
+## Prerequisites
 
-## How to Use as a Template
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) installed
+- [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd) installed
+- An active Azure subscription
 
-1. Click the **"Use this template"** button on GitHub
-2. Create a new repository from this template (public or private)
-3. Follow the post-creation checklist below
+## Deployment
 
-## Post-Creation Checklist
+### Using Azure Developer CLI
 
-After creating a repository from this template:
+1. **Login to Azure**:
+   ```bash
+   azd auth login
+   ```
 
-- [ ] **Choose and add a LICENSE file** - This template intentionally omits a license; add one appropriate for your project
-- [ ] **Configure Azure OIDC** (if using Azure) - Set up federated credentials and add the following repository secrets:
-  - `AZURE_CLIENT_ID` (repository variable)
-  - `AZURE_TENANT_ID` (repository secret)
-  - `AZURE_SUBSCRIPTION_ID` (repository secret)
-  
-  See [docs/azure-oidc-setup.md](docs/azure-oidc-setup.md) for detailed setup instructions. Then run the "Azure OIDC Connectivity Check" workflow manually to verify the configuration.
-- [ ] **Update README.md** - Replace this generic template README with repository-specific documentation
-- [ ] **Review AGENTS.md** - Update or remove this file to reflect your repository's specific purpose and conventions
+2. **Initialize the environment** (first time only):
+   ```bash
+   azd init
+   ```
+   When prompted, provide an environment name (e.g., `dev`, `prod`).
+
+3. **Provision the infrastructure**:
+   ```bash
+   azd provision
+   ```
+   When prompted, select your Azure subscription and location.
+
+4. **After deployment completes**, the API endpoint URL will be displayed in the outputs.
+
+### Testing the API
+
+Once deployed, you can test the API endpoint:
+
+```bash
+curl https://<your-apim-name>.azure-api.net/hello
+```
+
+Expected response:
+```
+Hello AI Gateway!
+```
+
+## Project Structure
+
+```
+├── azure.yaml              # Azure Developer CLI configuration
+├── infra/
+│   ├── main.bicep          # Main deployment orchestration
+│   ├── main.parameters.json # Parameter file for deployment
+│   └── resources.bicep     # API Management resource definitions
+└── README.md
+```
+
+## Clean Up
+
+To remove all deployed resources:
+
+```bash
+azd down
+```
+
+## Additional Resources
+
+- [Azure API Management Documentation](https://learn.microsoft.com/en-us/azure/api-management/)
+- [Azure Developer CLI Documentation](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
+- [Bicep Documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/)
