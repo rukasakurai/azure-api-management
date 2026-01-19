@@ -1,0 +1,8 @@
+# Azure Developer CLI (azd) configuration
+# Run `azd provision` to deploy the Azure API Management instance
+
+name: azure-api-management
+
+infra:
+  provider: bicep
+  path: infra
